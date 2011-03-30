@@ -1,4 +1,4 @@
-module PPM where
+module Render.PPM where
 
 {- Binär PPM (P6) -}
 
@@ -25,12 +25,3 @@ writePPM fn ppm = do
                   h <- openFile fn WriteMode
                   B.hPutStr h ppm
                   hClose h
-
-testArray :: Int -> Int -> Array (Int,Int) (Word8, Word8, Word8)
-testArray w h = array ((1,1),(h,w))
-                      [((i,j), (fromIntegral (i*255`div`h),
-                               fromIntegral (i*255`div`h),
-                               fromIntegral (i*j `mod` 255)))
-                               | i <- [1..h], j<-[1..w]]
-
-testPPM w h= byteToPPM $ testArray w h
