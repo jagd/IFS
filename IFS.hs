@@ -26,3 +26,14 @@ geoTrans tables (Geos xs) = Geos $ concatMap f xs
               f (Geos x)  = concatMap (\t -> map (geoTrans1 t) x) tables
               f       x   = map (`geoTrans1` x) tables
 geoTrans tables x = Geos $ [geoTrans1 t x | t <- tables]
+
+{- Den kleinste Rechteck zu finden,
+   in dem die ganze Struktur enthält werden kann -}
+findGeoBound :: Geo -> (Coord, Coord) {- Ausgabe: (Linksuntern, Rechtsoben) -}
+findGeoBound (Point c) = (c, c)
+findGeoBound (Line (c1, c2)) | c1 <= c2 = (c1, c2)
+                             | otherwise = (c2, c1)
+findGeoBound (Geos xs) = let (c1, c2) = unzip $ map findGeoBound xs
+                             (x1,y1) = unzip c1
+                             (x2,y2) = unzip c2
+                         in ((minimum x1, minimum y1), (maximum x2, maximum y2))
