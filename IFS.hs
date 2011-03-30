@@ -38,6 +38,6 @@ findGeoBound (Line ((x1,y1), (x2,y2)))
                      | y1 <= y2  = ((x2, y1), (x1,y2))
                      | otherwise = ((x2,y2), (x1,y1))
 findGeoBound (Geos xs) = let (c1, c2) = unzip $ map findGeoBound xs
-                             (x1,y1) = unzip c1
-                             (x2,y2) = unzip c2
+                             (x1, y1) = unzip c1
+                             (x2, y2) = unzip c2
                          in ((minimum x1, minimum y1), (maximum x2, maximum y2))
