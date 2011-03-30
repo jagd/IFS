@@ -31,8 +31,12 @@ geoTrans tables x = Geos $ [geoTrans1 t x | t <- tables]
    in dem die ganze Struktur enthält werden kann -}
 findGeoBound :: Geo -> (Coord, Coord) {- Ausgabe: (Linksuntern, Rechtsoben) -}
 findGeoBound (Point c) = (c, c)
-findGeoBound (Line (c1, c2)) | c1 <= c2 = (c1, c2)
-                             | otherwise = (c2, c1)
+findGeoBound (Line ((x1,y1), (x2,y2)))
+                     | x1 <= x2  = if y1 <= y2
+                                     then ((x1, y1), (x2, y2))
+                                     else ((x1,y2), (x2,y1))
+                     | y1 <= y2  = ((x2, y1), (x1,y2))
+                     | otherwise = ((x2,y2), (x1,y1))
 findGeoBound (Geos xs) = let (c1, c2) = unzip $ map findGeoBound xs
                              (x1,y1) = unzip c1
                              (x2,y2) = unzip c2
