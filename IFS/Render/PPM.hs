@@ -1,6 +1,6 @@
 module IFS.Render.PPM where
 
-import Debug.Trace
+-- import Debug.Trace
 
 {- Binär PPM (P6) -}
 
@@ -80,9 +80,9 @@ geoArray' conf w h geo = runSTArray $
         arr <- newArray ((-1,-1), (h+1,w+1)) (colorMax,colorMax,colorMax)
         paintGeo conf arr geo''
         return arr
-    where -- muss optimiert durch verkettung
-          geo'  = geoMirrorX geo
-          geo'' = (geoScal' xScalRate yScalRate . geoMove (-xmin) (-ymin)) geo'
+    where geo'  = geoTrans1 geoMirrorX geo
+          geo'' = geoTrans1 (geoScal' xScalRate yScalRate
+                            <*> geoMove (-xmin) (-ymin)) geo'
           ((xmino, ymino), (xmaxo, ymaxo)) = findGeoBound geo'
           (xmin, xmax) = if xmino == xmaxo
                            then (xmino - 1, xmaxo + 1)
@@ -101,9 +101,9 @@ geoArray conf w geo = runSTArray $
         arr <- newArray ((-1,-1), (h+1,w+1)) (colorMax,colorMax,colorMax)
         paintGeo conf arr geo''
         return arr
-    where -- muss optimiert durch verkettung
-          geo'  = geoMirrorX geo
-          geo'' = (geoScal scalRate . geoMove (-xmin) (-ymin)) geo'
+    where geo'  = geoTrans1 geoMirrorX geo
+          geo'' = geoTrans1 (geoScal scalRate
+                            <*> geoMove (-xmin) (-ymin)) geo'
           ((xmino, ymino), (xmaxo, ymaxo)) = findGeoBound geo'
           (xmin, xmax) = if xmino == xmaxo
                            then (xmino - 1, xmaxo + 1)
@@ -120,7 +120,6 @@ geoArray conf w geo = runSTArray $
 
 paintGeo conf arr (Point (x,y)) =
         writeArray arr (roundCoord (y,x)) $ penColor conf
-{- Bresenham-Algorithmus: -}
 paintGeo conf arr (Line (c1, c2)) =
         let points = map exchange $ bresenham c1 c2
         in forM_ points $ \c -> writeArray arr c $ penColor conf
@@ -133,6 +132,7 @@ paintGeo conf arr (ContLines (p:ps)) = foldM_ f p ps
 paintGeo conf arr (Geos gs) = forM_ gs $ paintGeo conf arr
 
 
+{- Bresenham-Algorithmus, input in (x,y) return index in (w,h) -}
 bresenham (x1,y1) (x2,y2) = map floorCoord $
         if adx > ady
           then zip (step1 x1 x2) (step y1 (dy/abs dx))

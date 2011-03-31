@@ -20,7 +20,7 @@ geoTrans1 table (Point c) = Point $ coordTrans table c
 geoTrans1 table (Line (c1, c2)) = let t = coordTrans table in Line (t c1, t c2)
 geoTrans1 table (ContLines cs) = ContLines $ map (coordTrans table) cs
 geoTrans1 table (Geos xs) = Geos $ map (geoTrans1 table) xs
--- geoTrans1 _ _ = error "special geoTrans not implemented"
+-- geoTrans1 _ _ = error "special geoTrans1 not implemented"
 
 
 {- mehrere Regeln -}
@@ -51,14 +51,21 @@ findGeoBound (Geos gs) = let (c1, c2) = unzip $ map findGeoBound gs
                          in ((minimum x1, minimum y1), (maximum x2, maximum y2))
 
 
-geoMove x y = geoTrans1 (1,0,0,1, x,y)
-geoRot phi = geoTrans1 (c,-s,s,c, 0,0)
-        where c = cos phi
-              s = sin phi
-geoScal' x y = geoTrans1 (x,0,0,y, 0,0)
-geoScal  m   = geoTrans1 (m,0,0,m, 0,0)
-geoShearX m = geoTrans1 (1,m,0,1, 0,0)
-geoShearY m = geoTrans1 (1,0,m,1, 0,0)
-geoMirrorX = geoTrans1 (1,0,0,-1, 0,0)
-geoMirrorY = geoTrans1 (-1,0,0,1, 0,0)
-geoMirrorPhi phi = geoRot (-phi) . geoMirrorX . geoRot phi
+geoMove x y = (1,0,0,1, x,y)
+geoRot phi = let c = cos phi
+                 s = sin phi
+             in (c,-s,s,c, 0,0)
+geoScal' x y = (x,0,0,y, 0,0)
+geoScal  m   = (m,0,0,m, 0,0)
+geoShearX m = (1,m,0,1, 0,0)
+geoShearY m = (1,0,m,1, 0,0)
+geoMirrorX = (1,0,0,-1, 0,0)
+geoMirrorY = (-1,0,0,1, 0,0)
+geoMirrorPhi phi = (geoRot (-phi)) `chain` geoMirrorX `chain` (geoRot phi)
+
+chain :: TransMatrix -> TransMatrix -> TransMatrix
+chain (a2,b2,c2,d2,e2,f2) (a1,b1,c1,d1,e1,f1) =
+              (a1*a2+b2*c1, a2*b1+b2*d1, a1*c2+c1*d2, c2*b1+d1*d2,
+               a2*e1+b2*f1+e2, c2*e1+d2*f1+f2)
+
+(<*>) = chain
