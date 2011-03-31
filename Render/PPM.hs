@@ -111,8 +111,8 @@ paintGeo conf arr (Geos gs) = forM_ gs $ paintGeo conf arr
 
 bresenham (x1,y1) (x2,y2) = map floorCoord $
         if adx > ady
-          then zip (step1 x1 x2) (step y1 (dy/dx))
-          else zip (step x1 (dx/dy)) (step1 y1 y2)
+          then zip (step1 x1 x2) (step y1 (dy/abs dx))
+          else zip (step x1 (dx/abs dy)) (step1 y1 y2)
     where dx = x2 - x1
           dy = y2 - y1
           adx = abs dx
