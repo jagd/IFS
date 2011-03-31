@@ -1,5 +1,10 @@
 module Main where
 
+{-
+Using ImageMagick to convert *.ppm to .gif:
+        convert -verbose -delay 50 -loop 0 zweig*.ppm Zweig.gif
+-}
+
 import Control.Monad
 
 import IFS.Core
