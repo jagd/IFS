@@ -4,7 +4,7 @@ type Coord = (Double, Double)
 
 data Geo = Point Coord
          | Line (Coord, Coord)
-         | ContLines [Coord]
+         | ContLines [Coord] -- Mehr als 2 Punkten !
          | Geos [Geo]
          deriving (Show)
 

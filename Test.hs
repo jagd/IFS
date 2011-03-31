@@ -18,6 +18,8 @@ tableZweig =
 
 testGeos = geoTrans tableZweig $ Geos [Point (0,0), Geos [Point(0,0), Line ((1,1), (2,2))]]
 
+testGeoPPM = writePPM "test.ppm" . geoPPM defaultConfig 100
+
 testFindGeoBound =  findGeoBound (Geos [Point (0,0), Point (0,2),
                                   Line ((1,0.5), (-1,1.5)),
                                   ContLines [(0,0), (1,1), (0,2), (-1,2)]
@@ -31,5 +33,5 @@ testArray w h = array ((1,1),(h,w))
                                fromIntegral (i*j `mod` 255)))
                                | i <- [1..h], j<-[1..w]]
 
-testPPM w h= byteToPPM $ testArray w h
+testPPM w h= arrayPPM $ testArray w h
 writeTestPPM = writePPM "test.ppm" $ testPPM 600 480
