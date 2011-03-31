@@ -49,3 +49,16 @@ findGeoBound (Geos gs) = let (c1, c2) = unzip $ map findGeoBound gs
                              (x1, y1) = unzip c1
                              (x2, y2) = unzip c2
                          in ((minimum x1, minimum y1), (maximum x2, maximum y2))
+
+
+geoMove x y = geoTrans1 (1,0,0,1, x,y)
+geoRot phi = geoTrans1 (c,-s,s,c, 0,0)
+        where c = cos phi
+              s = sin phi
+geoScal' x y = geoTrans1 (x,0,0,y, 0,0)
+geoScal  m   = geoTrans1 (m,0,0,m, 0,0)
+geoShearX m = geoTrans1 (1,m,0,1, 0,0)
+geoShearY m = geoTrans1 (1,0,m,1, 0,0)
+geoMirrorX = geoTrans1 (1,0,0,-1, 0,0)
+geoMirrorY = geoTrans1 (-1,0,0,1, 0,0)
+geoMirrorPhi phi = geoRot (-phi) . geoMirrorX . geoRot phi
