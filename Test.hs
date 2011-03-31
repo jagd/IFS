@@ -18,7 +18,10 @@ tableZweig =
 
 testGeos = geoTrans tableZweig $ Geos [Point (0,0), Geos [Point(0,0), Line ((1,1), (2,2))]]
 
-testFindGeoBound =  findGeoBound (Geos [Point (0,0), Point (0,2), Line ((1,0.5), (-1,1.5))]) == ((-1,0), (1,2))
+testFindGeoBound =  findGeoBound (Geos [Point (0,0), Point (0,2),
+                                  Line ((1,0.5), (-1,1.5)),
+                                  ContLines [(0,0), (1,1), (0,2), (-1,2)]
+                                  ]) == ((-1,0), (1,2))
 
 {- PPM -}
 testArray :: Int -> Int -> Array (Int,Int) (Word8, Word8, Word8)
