@@ -11,7 +11,7 @@ import IFS.Core
 import IFS.Render.PPM
 
 
-zweigTable =
+table =
         [
             ( -0.467, 0.002, -0.113, 0.015, 0.4, 0.4),
             ( 0.387, 0.43, 0.43, -0.387, 0.256, 0.522),
@@ -20,7 +20,7 @@ zweigTable =
 
 g0 = ContLines [(-1,0),(-1,1),(1,1),(1,0),(-1,0)]
 
-zweigVectors = iterate (geoTrans zweigTable)  g0
+vectors = iterate (geoTrans table)  g0
 
 main = do
        putStrLn "Breite (in Pixel): "
@@ -32,7 +32,7 @@ main = do
        forM_ [0 .. it-1] $
              \i -> writePPM ("zweig"++ myshow i ++ ".ppm") $
                        geoPPM' defaultConfig{penColor = (0x0B, 0x7D, 0x0F)}
-                               width height (zweigVectors !! i)
+                               width height (vectors !! i)
     where myshow i | i < 10 = "00" ++ show i
                    | i < 100 = "0" ++ show i
                    | otherwise = show i
