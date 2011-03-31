@@ -3,13 +3,16 @@ RM=rm
 GHC=ghc
 GHCFLAGS=--make -O3
 
-EXES=Zweig$(BINEXT)
+EXES=Zweig$(BINEXT) Baum$(BINEXT)
 
 .PHONY: all clean
 
 all: $(EXES)
 
 Zweig$(BINEXT): Zweig.hs
+	$(GHC) $(GHCFLAGS) $< -o $@
+
+Baum$(BINEXT): Baum.hs
 	$(GHC) $(GHCFLAGS) $< -o $@
 
 clean:
