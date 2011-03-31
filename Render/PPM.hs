@@ -74,8 +74,8 @@ geoPPM conf w g = arrayPPM $ geoArray conf w g
 geoArray :: Config -> Int -> Geo -> Array  (Int, Int) Color
 geoArray conf w geo = runSTArray $
         do
-        arr <- newArray ((0,0), (h+1,w+1)) (colorMax,colorMax,colorMax)
-        paintGeo conf arr $ trace (show geo'') geo''
+        arr <- newArray ((-1,-1), (h+1,w+1)) (colorMax,colorMax,colorMax)
+        paintGeo conf arr geo''
         return arr
     where -- muss optimiert durch verkettung
           geo'  = geoMirrorX geo
