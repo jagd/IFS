@@ -1,4 +1,4 @@
-module Render.PPM where
+module IFS.Render.PPM where
 
 import Debug.Trace
 
@@ -11,7 +11,7 @@ import Data.Array.ST
 import Control.Monad
 import System.IO
 
-import IFS
+import IFS.Core
 
 
 colorMax = 255
@@ -70,6 +70,30 @@ sign x | x > 0  = 1
 
 geoPPM :: Config -> Int -> Geo -> PPM
 geoPPM conf w g = arrayPPM $ geoArray conf w g
+
+geoPPM' :: Config -> Int -> Int -> Geo -> PPM
+geoPPM' conf w h g = arrayPPM $ geoArray' conf w h g
+
+geoArray' :: Config -> Int -> Int -> Geo -> Array  (Int, Int) Color
+geoArray' conf w h geo = runSTArray $
+        do
+        arr <- newArray ((-1,-1), (h+1,w+1)) (colorMax,colorMax,colorMax)
+        paintGeo conf arr geo''
+        return arr
+    where -- muss optimiert durch verkettung
+          geo'  = geoMirrorX geo
+          geo'' = (geoScal' xScalRate yScalRate . geoMove (-xmin) (-ymin)) geo'
+          ((xmino, ymino), (xmaxo, ymaxo)) = findGeoBound geo'
+          (xmin, xmax) = if xmino == xmaxo
+                           then (xmino - 1, xmaxo + 1)
+                           else (xmino, xmaxo)
+          (ymin, ymax) = if ymino == ymaxo
+                           then (ymino - 1, ymaxo + 1)
+                           else (ymino, ymaxo)
+          ow = xmax - xmin -- original width
+          oh = ymax - ymin -- original height
+          xScalRate = (fromIntegral w) / ow
+          yScalRate = (fromIntegral h) / oh
 
 geoArray :: Config -> Int -> Geo -> Array  (Int, Int) Color
 geoArray conf w geo = runSTArray $

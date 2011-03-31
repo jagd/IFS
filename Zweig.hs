@@ -2,8 +2,8 @@ module Main where
 
 import Control.Monad
 
-import IFS
-import Render.PPM
+import IFS.Core
+import IFS.Render.PPM
 
 
 zweigTable =
@@ -20,12 +20,14 @@ zweigVectors = iterate (geoTrans zweigTable)  g0
 main = do
        putStrLn "Breite (in Pixel): "
        width <- getLine >>= return.read
+       putStrLn "Height (in Pixel): "
+       height <- getLine >>= return.read
        putStrLn "Iterations (> 0): "
        it <- getLine >>= return.read
        forM_ [0 .. it-1] $
              \i -> writePPM ("zweig"++ myshow i ++ ".ppm") $
-                       geoPPM defaultConfig{penColor = (0x0B, 0x7D, 0x0F)}
-                              width (zweigVectors !! i)
+                       geoPPM' defaultConfig{penColor = (0x0B, 0x7D, 0x0F)}
+                               width height (zweigVectors !! i)
     where myshow i | i < 10 = "00" ++ show i
                    | i < 100 = "0" ++ show i
                    | otherwise = show i

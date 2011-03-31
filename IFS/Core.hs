@@ -1,4 +1,4 @@
-module IFS where
+module IFS.Core where
 
 type Coord = (Double, Double)
 

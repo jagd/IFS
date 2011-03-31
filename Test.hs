@@ -1,7 +1,7 @@
 module Test where
 
-import IFS
-import Render.PPM
+import IFS.Core
+import IFS.Render.PPM
 
 
 import Data.Array
@@ -18,7 +18,7 @@ tableZweig =
 
 testGeos = geoTrans tableZweig $ Geos [Point (0,0), Geos [Point(0,0), Line ((1,1), (2,2))]]
 
-testGeoPPM = writePPM "test.ppm" . geoPPM defaultConfig 100
+testGeoPPM = writePPM "test.ppm" . geoPPM defaultConfig 300
 
 testFindGeoBound =  findGeoBound (Geos [Point (0,0), Point (0,2),
                                   Line ((1,0.5), (-1,1.5)),
