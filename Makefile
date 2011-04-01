@@ -1,13 +1,16 @@
-BINEXT= # or ".exe"
-RM=rm
+BINEXT=.exe # or ".exe"
+RM=del
 GHC=ghc
 GHCFLAGS=--make -O3
 
-EXES=Zweig$(BINEXT) Baum$(BINEXT) Blatt$(BINEXT) 
+EXES=Zweig$(BINEXT) Baum$(BINEXT) Blatt$(BINEXT) BlattAhorn$(BINEXT) 
 
 .PHONY: all clean
 
 all: $(EXES)
+
+BlattAhorn$(BINEXT): BlattAhorn.hs
+	$(GHC) $(GHCFLAGS) $< -o $@
 
 Zweig$(BINEXT): Zweig.hs
 	$(GHC) $(GHCFLAGS) $< -o $@
@@ -20,6 +23,7 @@ Blatt$(BINEXT): Blatt.hs
 
 clean:
 	-$(RM) *.o *.hi
-	-$(RM) IFS/*.hi IFS/*.o # leichter zu Windows portieren
+	# leichter zu Windows portieren
+	-$(RM) IFS/*.hi IFS/*.o
 	-$(RM) IFS/Render/*.hi IFS/Render/*.o
 	-$(RM) $(EXES)
