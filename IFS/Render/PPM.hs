@@ -80,9 +80,9 @@ geoArray' conf w h geo = runSTArray $
         arr <- newArray ((-1,-1), (h+1,w+1)) (colorMax,colorMax,colorMax)
         paintGeo conf arr geo''
         return arr
-    where geo'  = geoTrans1 geoMirrorX geo
-          geo'' = geoTrans1 (geoScal' xScalRate yScalRate
-                            <*> geoMove (-xmin) (-ymin)) geo'
+    where geo'  = geoTrans1 trMirrorX geo
+          geo'' = geoTrans1 (trScal' xScalRate yScalRate
+                            <*> trMove (-xmin) (-ymin)) geo'
           ((xmino, ymino), (xmaxo, ymaxo)) = findGeoBound geo'
           (xmin, xmax) = if xmino == xmaxo
                            then (xmino - 1, xmaxo + 1)
@@ -101,9 +101,9 @@ geoArray conf w geo = runSTArray $
         arr <- newArray ((-1,-1), (h+1,w+1)) (colorMax,colorMax,colorMax)
         paintGeo conf arr geo''
         return arr
-    where geo'  = geoTrans1 geoMirrorX geo
-          geo'' = geoTrans1 (geoScal scalRate
-                            <*> geoMove (-xmin) (-ymin)) geo'
+    where geo'  = geoTrans1 trMirrorX geo
+          geo'' = geoTrans1 (trScal scalRate
+                            <*> trMove (-xmin) (-ymin)) geo'
           ((xmino, ymino), (xmaxo, ymaxo)) = findGeoBound geo'
           (xmin, xmax) = if xmino == xmaxo
                            then (xmino - 1, xmaxo + 1)

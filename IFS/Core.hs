@@ -51,17 +51,17 @@ findGeoBound (Geos gs) = let (c1, c2) = unzip $ map findGeoBound gs
                          in ((minimum x1, minimum y1), (maximum x2, maximum y2))
 
 
-geoMove x y = (1,0,0,1, x,y)
-geoRot phi = let c = cos phi
-                 s = sin phi
-             in (c,-s,s,c, 0,0)
-geoScal' x y = (x,0,0,y, 0,0)
-geoScal  m   = (m,0,0,m, 0,0)
-geoShearX m = (1,m,0,1, 0,0)
-geoShearY m = (1,0,m,1, 0,0)
-geoMirrorX = (1,0,0,-1, 0,0)
-geoMirrorY = (-1,0,0,1, 0,0)
-geoMirrorPhi phi = (geoRot (-phi)) `chain` geoMirrorX `chain` (geoRot phi)
+trMove x y = (1,0,0,1, x,y)
+trRot phi = let c = cos phi
+                s = sin phi
+            in (c,-s,s,c, 0,0)
+trScal' x y = (x,0,0,y, 0,0)
+trScal  m   = (m,0,0,m, 0,0)
+trShearX  m = (1,m,0,1, 0,0)
+trShearY  m = (1,0,m,1, 0,0)
+trMirrorX   = (1,0,0,-1, 0,0)
+trMirrorY   = (-1,0,0,1, 0,0)
+trMirrorPhi phi = trRot (-phi) <*> trMirrorX <*> trRot phi
 
 chain :: TransMatrix -> TransMatrix -> TransMatrix
 chain (a2,b2,c2,d2,e2,f2) (a1,b1,c1,d1,e1,f1) =
