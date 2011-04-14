@@ -1,9 +1,9 @@
-BINEXT=.exe # or ".exe"
-RM=del
+BINEXT=# or ".exe"
+RM=rm
 GHC=ghc
 GHCFLAGS=--make -O3
 
-EXES=Zweig$(BINEXT) Baum$(BINEXT) Blatt$(BINEXT) BlattAhorn$(BINEXT) 
+EXES=Zweig$(BINEXT) Baum$(BINEXT) Blatt$(BINEXT) BlattAhorn$(BINEXT)
 
 .PHONY: all clean
 
